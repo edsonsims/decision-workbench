@@ -8,5 +8,24 @@ DecisionTune is based on answerdotai/ModernBERT-large. Its model card documents
 additional training-data attribution and provenance limits. Model weights and
 upstream implementation files are not redistributed in this repository.
 
+The public-data comparison also loads these third-party checkpoints, without
+redistributing their weights:
+- Laya Multilingual by Convai Innovations and Laya contributors, Apache-2.0;
+  independent FP16 MLX port by laya-mlx contributors, published by aac6fef,
+  Apache-2.0.
+  https://huggingface.co/convaiinnovations/laya-multilingual
+  https://huggingface.co/aac6fef/laya-multilingual-mlx
+  Runtime: https://github.com/MohammadAsadi-7/laya-mlx (Apache-2.0)
+- Qwen3-0.6B by the Qwen Team / Alibaba, Apache-2.0.
+  https://huggingface.co/Qwen/Qwen3-0.6B
+  Loaded through Transformers (Apache-2.0) and PyTorch (BSD-style).
+
+benchmarks/public-v1/cases.jsonl includes adapted selected test data from CUAD
+(The Atticus Project; Hendrycks, Burns, Chen and Ball, 2021) and BANKING77
+(PolyAI; Casanueva, Temcinas, Gerz, Henderson and Vulic, 2020), both CC-BY-4.0.
+Their text/annotations retain that license, rather than our code's MIT license.
+Source revisions, attribution, license links and adaptation details:
+benchmarks/public-v1/README.md and docs/datasets.md.
+
 Jev is a TypeSafe product. This independent study is not affiliated with TypeSafe
 or DecisionTune and does not claim their names, benchmarks or training work.

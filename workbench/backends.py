@@ -57,6 +57,7 @@ class DecisionBackend(Protocol):
 class RuleBackend:
     """A deliberately simple transparent baseline, not an AI model."""
     name = 'rules-baseline'
+    neural = False
 
     def choose(self, state: Any, question: str, options: dict[str, str]) -> Decision:
         role = state.get('role') if isinstance(state, dict) else None
@@ -98,6 +99,7 @@ class RuleBackend:
 class DecisionTuneBackend:
     """Load verified local weights only; downloading is a separate explicit step."""
     name = 'decisiontune-1.0'
+    neural = True
 
     def __init__(self, model_path: str | Path, backend: str = 'mlx'):
         path = Path(model_path)
@@ -122,6 +124,7 @@ class ReorderedBackend:
     def __init__(self, wrapped: DecisionBackend):
         self.wrapped = wrapped
         self.name = wrapped.name
+        self.neural = getattr(wrapped, 'neural', False) is True
 
     def choose(self, state: Any, question: str, options: dict[str, str]) -> Decision:
         return self.wrapped.choose(state, question, dict(reversed(list(options.items()))))

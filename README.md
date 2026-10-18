@@ -14,8 +14,33 @@ Two workflows run through a bounded LangGraph graph:
 The roles are dispatcher → specialist → reviewer. The default dispatcher uses
 the task's validated shape, followed by at most two provider calls. An explicit
 learned-router variant permits up to three calls for comparison. The specialists
-use typed choices, not free-form generated explanations. A deterministic
-baseline and a real local neural model implement the same decision interface.
+use typed choices, not free-form generated explanations. Rules, native decision
+heads and a general language model can implement the same decision interface.
+
+## Public data, three local models
+
+A separate [frozen comparison](reference/public-v1/README.md) runs DecisionTune
+1.0, Laya Multilingual and Qwen3-0.6B on **50 CUAD contract excerpts** and
+**80 BANKING77 support queries**. These are selected-label classification
+adaptations of the publishers' test data, rather than their full benchmarks.
+
+Every case runs twice, with normal and reversed option order. The reports keep
+per-case predictions, failures, confusion matrices, macro F1, group-bootstrap
+intervals, timings and exact data/model/source hashes. No expected labels enter
+the providers. BANKING77 is a declared DecisionTune training source; all model
+contamination remains a limitation.
+
+Read [the protocol and tradeoffs](docs/public-evaluation.md) or verify the
+published metrics offline, without weights or network access:
+
+```sh
+.venv/bin/python -m workbench.datasets verify --out benchmarks/public-v1
+.venv/bin/python -m workbench.benchmark_report --runs reference/public-v1
+```
+
+The public classification experiment and the synthetic review-workflow harness
+answer different questions. Earlier [workflow results](reference/README.md),
+including the failed learned router, remain available unchanged.
 
 ## Run the harness without downloading a model
 

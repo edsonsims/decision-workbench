@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "decision-workbench"
-version = "0.1.0"
-description = "Typed local decisions and trace-based evaluations for contract triage and invoice reconciliation"
+version = "0.2.0"
+description = "Local typed decisions, auditable review workflows and reproducible public-data model comparisons"
 requires-python = ">=3.11"
 dependencies = ["langgraph==1.2.16", "fastapi==0.143.3", "uvicorn==0.54.0"]
 
@@ -16,6 +16,7 @@ mlx = ["decision-tune[mlx]==1.0.0"]
 
 [project.scripts]
 decision-workbench = "workbench.harness:main"
+decision-benchmark = "workbench.benchmark:main"
 
 [tool.setuptools.packages.find]
 include = ["workbench*"]

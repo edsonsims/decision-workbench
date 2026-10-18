@@ -125,11 +125,12 @@ def evaluate(cases: list[dict], backend, min_margin: float = 0.15,
         entry['role'] for row in records for entry in row['result'].get('trace', []) if 'decision' in entry))
     summary['primaryBackendErrors'] = sum(
         entry.get('error') == 'backend_error' for row in records for entry in row['result'].get('trace', []))
-    summary['neuralDecisionAttempts'] = summary['totalDecisionCalls'] if backend.name == 'decisiontune-1.0' else 0
+    neural = getattr(backend, 'neural', False) is True
+    summary['neuralDecisionAttempts'] = summary['totalDecisionCalls'] if neural else 0
     summary['successfulNeuralDecisions'] = (sum(
         sum('decision' in entry for entry in row['result'].get('trace', []))
         + sum('decision' in entry for entry in row.get('optionOrderProbe', {}).get('reorderedResult', {}).get('trace', []))
-        for row in records) if backend.name == 'decisiontune-1.0' else 0)
+        for row in records) if neural else 0)
     return summary, records
 
 

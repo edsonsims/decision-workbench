@@ -1,5 +1,9 @@
 # Study design
 
+This document preserves the initial synthetic workflow experiment. The later
+[public-data comparison](public-evaluation.md) has its own frozen tasks,
+three-model protocol and results; it does not replace these fixture results.
+
 ## Question
 
 Can a local typed-decision model fit into a bounded document-review workflow
@@ -61,10 +65,10 @@ require a new result artifact rather than silently replacing an old claim.
 | Research assistance | Can a claim reviewer distinguish an exact quote from supporting evidence? | Planned |
 | Procurement | Can a typed policy gate flag order exceptions without approving a purchase? | Planned |
 
-The next useful experiment is to freeze a new evaluation split before changing
-prompts, then compare calibration, option-order stability and review coverage.
-Another is a provider adapter for an independently served decision model or Jev;
-no such provider was called in this milestone.
+The [public-data follow-up](public-evaluation.md) now freezes two public test
+slices and compares DecisionTune, Laya and Qwen with option-order probes.
+Calibration and selective review coverage remain future experiments requiring
+a separate development split. Jev has not been called in either experiment.
 
 ## Sources
 
