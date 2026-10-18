@@ -1,0 +1,72 @@
+{
+  "backend": "rules-baseline",
+  "routingMode": "shape",
+  "datasetKind": "authored synthetic development fixtures, not held out",
+  "cases": 20,
+  "routeCorrect": 20,
+  "categoryCases": 19,
+  "categoryCorrect": 17,
+  "categoryStageReached": 19,
+  "humanReviewCases": 18,
+  "contractFailures": 0,
+  "primaryDecisionCalls": 38,
+  "orderProbeDecisionCalls": 38,
+  "byDomain": {
+    "finance": {
+      "cases": 10,
+      "routeCorrect": 10,
+      "categoryCases": 10,
+      "categoryCorrect": 10
+    },
+    "legal": {
+      "cases": 9,
+      "routeCorrect": 9,
+      "categoryCases": 9,
+      "categoryCorrect": 7
+    },
+    "other": {
+      "cases": 1,
+      "routeCorrect": 1,
+      "categoryCases": 0,
+      "categoryCorrect": 0
+    }
+  },
+  "optionOrderRouteChanges": 0,
+  "optionOrderCategoryChanges": 0,
+  "failureCases": [
+    "legal-ambiguous",
+    "legal-negation"
+  ],
+  "limits": [
+    "No legal advice or payment actions",
+    "Finance decisions classify supplied deterministic arithmetic findings",
+    "Neural option scores are uncalibrated; margins are routing heuristics",
+    "Literal citation checks do not establish the semantic correctness of a clause classification",
+    "Fixture results do not establish generalization, commercial performance or model superiority"
+  ],
+  "totalDecisionCalls": 76,
+  "primaryStageDecisionCounts": {
+    "legal_analyst": 9,
+    "reviewer": 19,
+    "finance_analyst": 10
+  },
+  "primaryBackendErrors": 0,
+  "neuralDecisionAttempts": 0,
+  "successfulNeuralDecisions": 0,
+  "provenance": {
+    "datasetSha256": "dcf1879b1f34a50233ba0c285b4600507cefdb590696e1f971a187af7ea1247b",
+    "workflowSha256": "fc8ed567a3cb85938c56968b15e3df324cc7e0ce5b88a9f8ffb6ebac0d1a0a9a",
+    "sourceFilesSha256": {
+      "__init__.py": "04ce5b7d61dfd0cf69e1a20ce92e37dfe6e3221b048eb1413da178b62de247b8",
+      "api.py": "87ff8ed120567eb9c0d768bb0583257ab97eea445881d060ea625235f63e4ba3",
+      "backends.py": "6f086c822ab032c2a28c8eaafc91daf3ac2bd16eb7c79395669a431083813b75",
+      "checks.py": "8f27400bba3df3a9a886d5681b0ffa328c1359d0b96dbd2437f79c520eddbdab",
+      "harness.py": "72d52acabf4c50317060c9e0d674dcd98417e42c2ad1d390b76637135fa42cad",
+      "workflow.py": "fc8ed567a3cb85938c56968b15e3df324cc7e0ce5b88a9f8ffb6ebac0d1a0a9a"
+    },
+    "python": "3.13.1",
+    "platform": "Darwin",
+    "machine": "arm64",
+    "langgraph": "1.2.16"
+  }
+}

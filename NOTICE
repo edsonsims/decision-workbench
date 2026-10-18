@@ -1,0 +1,12 @@
+Decision Workbench uses LangGraph (MIT) for its graph runtime.
+
+The optional local model adapter uses DecisionTune 1.0 and decision-tune==1.0.0,
+published by DecisionTune / hotin.ai under Apache-2.0.
+Model: https://huggingface.co/decision-tune/decisiontune-1.0
+Implementation: https://github.com/decision-tune/decision-tune
+DecisionTune is based on answerdotai/ModernBERT-large. Its model card documents
+additional training-data attribution and provenance limits. Model weights and
+upstream implementation files are not redistributed in this repository.
+
+Jev is a TypeSafe product. This independent study is not affiliated with TypeSafe
+or DecisionTune and does not claim their names, benchmarks or training work.
