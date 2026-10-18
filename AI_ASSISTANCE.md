@@ -29,3 +29,5 @@ contamination and transformed-task limits are recorded separately in
 docs/public-evaluation.md. These are not production, contamination-free research,
 legal-advice or financial-decision claims. Actual model runs are separate from
 the offline tests, which include explicit test doubles.
+
+The README visual refresh and original SVG illustrations were also drafted with Codex. The artwork is illustrative, not a screenshot or live system. Runnable README examples and their selected output fields were checked against local CLI/HTTP runs; they do not imply owner review, production use or new model-quality evidence.

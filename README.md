@@ -1,66 +1,94 @@
-# Decision Workbench
+<picture>
+  <source media="(max-width: 600px)" srcset="assets/readme-header-mobile.svg">
+  <img src="assets/readme-header.svg" alt="Decision Workbench — local models, public data and visible tradeoffs" width="1200">
+</picture>
 
-What happens when a small decision model sits between a document, a specialist
-and a reviewer? This project makes those boundaries visible and testable.
+Compare small typed decision models and a general language model behind the same
+`choose(state, question, options)` interface. Inspect the raw choices, reverse
+the options, and keep the mistakes in the report.
 
-Two workflows run through a bounded LangGraph graph:
+The project has two separate experiments: a **frozen public-data comparison**
+and a **bounded review workflow** for fictional clauses and synthetic invoices.
+Both run locally; neither executes legal or financial actions.
 
-- **Contract triage:** classify a fictional clause, attach an exact source quote,
-  and send the result to a human review queue.
-- **Invoice reconciliation:** calculate ledger findings with Decimal, then ask
-  the model which review queue those findings belong in. Currency, duplicates
-  and tenant boundaries remain explicit code checks.
+[Recorded model comparison](reference/public-v1/README.md) ·
+[Evaluation protocol](docs/public-evaluation.md) · [API examples](docs/api-examples.md) ·
+[Assistance & attribution](AI_ASSISTANCE.md)
 
-The roles are dispatcher → specialist → reviewer. The default dispatcher uses
-the task's validated shape, followed by at most two provider calls. An explicit
-learned-router variant permits up to three calls for comparison. The specialists
-use typed choices, not free-form generated explanations. Rules, native decision
-heads and a general language model can implement the same decision interface.
+## Start without weights
 
-## Public data, three local models
+Python **3.11+**, from the repository root:
 
-A separate [frozen comparison](reference/public-v1/README.md) runs DecisionTune
-1.0, Laya Multilingual and Qwen3-0.6B on **50 CUAD contract excerpts** and
-**80 BANKING77 support queries**. These are selected-label classification
-adaptations of the publishers' test data, rather than their full benchmarks.
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python -m workbench.harness --backend rules --out .local/readme-demo
+```
 
-Every case runs twice, with normal and reversed option order. The reports keep
-per-case predictions, failures, confusion matrices, macro F1, group-bootstrap
-intervals, timings and exact data/model/source hashes. No expected labels enter
-the providers. BANKING77 is a declared DecisionTune training source; all model
-contamination remains a limitation.
+This runs the actual LangGraph workflow using a transparent rules baseline.
+Selected fields from the CLI output:
 
-Read [the protocol and tradeoffs](docs/public-evaluation.md) or verify the
-published metrics offline, without weights or network access:
+```json
+{
+  "backend": "rules-baseline",
+  "routingMode": "shape",
+  "cases": 20,
+  "categoryCases": 19,
+  "categoryCorrect": 17,
+  "contractFailures": 0,
+  "neuralDecisionAttempts": 0
+}
+```
+
+The rules miss the ambiguous and negated clauses. Those errors remain in
+`.local/readme-demo/traces.jsonl`; the summary and source/data hashes are saved
+alongside it. These are **synthetic development cases**, not held-out data or
+model-quality measurements.
+
+## Three models, the same public examples
+
+The [recorded comparison](reference/public-v1/README.md) contains **50 CUAD
+contract excerpts** across five clause types and **80 BANKING77 support queries**
+across eight intents. Each model answered every case in original and reversed
+option order: **780 measured decisions**, plus three separate warmups.
+
+| Checkpoint + adapter | BANKING77 correct | CUAD correct | Choice changes after reversal · BANKING77 / CUAD |
+| --- | ---: | ---: | ---: |
+| DecisionTune 1.0 · native decision head | 57 / 80 | 32 / 50 | 11 / 80 · 4 / 50 |
+| Laya Multilingual · native decision head | 53 / 80 | 35 / 50 | 27 / 80 · 10 / 50 |
+| Qwen3-0.6B · candidate-letter token scoring | 12 / 80 | 12 / 50 | 64 / 80 · 41 / 50 |
+
+Correctness above uses the original option order, with all planned cases in the
+denominator. Every call completed in this run. The Qwen result is deliberately
+retained: this particular no-generation adapter performed poorly and was highly
+sensitive to option order. It does not measure every way to use Qwen.
+
+These are small, selected-label adaptations of public test data. **BANKING77 is a
+declared DecisionTune training source**; exposure for all other model/task pairs
+is unknown. The results do not establish unseen-data performance or model
+superiority. The full report includes macro F1, source-group bootstrap intervals,
+confusion matrices, timings, limits and every prediction.
+
+Verify the data and recompute the report **offline, without model weights**:
 
 ```sh
 .venv/bin/python -m workbench.datasets verify --out benchmarks/public-v1
 .venv/bin/python -m workbench.benchmark_report --runs reference/public-v1
 ```
 
-The public classification experiment and the synthetic review-workflow harness
-answer different questions. Earlier [workflow results](reference/README.md),
-including the failed learned router, remain available unchanged.
+The second command finishes with:
 
-## Run the harness without downloading a model
-
-Python 3.11 or later:
-
-```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.lock
-.venv/bin/python -m pytest
-.venv/bin/python -m workbench.harness --backend rules --out .local/rules
+```text
+Verified 3 runs; metrics recomputed offline from all frozen predictions.
 ```
 
-The baseline runs the actual LangGraph workflow with transparent rules. It tests
-orchestration and policy behavior; it is not labelled AI inference.
+[Download and rerun the pinned models on Apple silicon](reference/public-v1/README.md#run-the-models-again-on-apple-silicon).
+Weights stay outside Git. The checked-in artifacts preserve their execution
+commit, dataset hashes, checkpoint revisions and package versions.
 
-Each run writes a summary and per-case traces. The default option-order probe
-runs each case again with the same labels in reverse order. Reports distinguish
-primary calls, probe calls, neural decision attempts and successful neural decisions.
+## Try a typed decision over HTTP
 
-## Try the local API
+Start the loopback API using the same rules baseline:
 
 ```sh
 .venv/bin/python -m workbench.api --backend rules --port 8080
@@ -69,82 +97,65 @@ primary calls, probe calls, neural decision attempts and successful neural decis
 In another terminal:
 
 ```sh
-curl http://127.0.0.1:8080/v1/decisions -H 'Content-Type: application/json' \
+curl -sS http://127.0.0.1:8080/v1/decisions \
+  -H 'Content-Type: application/json' \
   --data '{"state":{"role":"legal_analyst","document":{"text":"Keep the information confidential."}},"question":"Which clause topic is present?","options":{"confidentiality":"Protect disclosed information","payment":"Fees or payment deadlines"}}'
 ```
 
-The rules provider supports the workflow's structured role inputs. Start with `--backend decisiontune
---model-path /absolute/model/path --engine mlx` to use the local model instead.
+Actual response:
 
-`POST /v1/decisions` returns a choice, option scores, margin and backend name.
-`POST /v1/reviews` accepts a workflow task from a fixture's `input` field.
-`GET /healthz` reports readiness; `/openapi.json` describes the request schemas.
-The server binds to loopback, serializes provider access, limits body/state sizes,
-and disables hosted tracing explicitly. It is a local API, not a Jev wire-protocol
-implementation. [API tests](tests/test_api.py) include real TCP requests and
-malformed-provider cases.
-
-## Run the local decision model
-
-[DecisionTune 1.0](https://huggingface.co/decision-tune/decisiontune-1.0) is an
-Apache-2.0 model and implementation with a typed-decision interface similar in
-purpose to [Jev](https://docs.typesafe.ai/introduction). It selects among supplied
-options. This project does not claim API or accuracy equivalence with Jev.
-
-The verified local run used macOS arm64 and the MLX backend. Its exact runtime
-environment is in `requirements-model-macos.lock`. On Apple silicon:
-
-```sh
-python3 -m venv .venv-model
-.venv-model/bin/python -m pip install -r requirements-model-macos.lock
-HF_HOME="$PWD/.local/model-cache" .venv-model/bin/decision-tune download --yes --backend mlx
+```json
+{"choice":"confidentiality","probabilities":{"confidentiality":1.0,"payment":0.0},"margin":1.0,"backend":"rules-baseline"}
 ```
 
-The download prints a local snapshot path. Pass that path explicitly:
+Those one-hot values encode a rule's output, not neural confidence. The API also
+accepts `POST /v1/reviews` for a full workflow task; see the
+[request and response examples](docs/api-examples.md). `/healthz` reports readiness
+and `/openapi.json` describes the strict request schemas.
 
-```sh
-.venv-model/bin/python -m workbench.harness --backend decisiontune \
-  --engine mlx --model-path /absolute/path/printed/by/download --out .local/model
+The server binds to `127.0.0.1`, serializes provider access, bounds input sizes
+and disables hosted tracing. It currently serves rules or a verified local
+DecisionTune snapshot. It is a local study API, not a Jev wire-protocol server.
+
+## Follow the review workflow
+
+```mermaid
+flowchart LR
+    Input[Validated task shape] --> Dispatch[Deterministic dispatcher]
+    Dispatch --> Legal[Clause topic + exact quote]
+    Dispatch --> Finance[Decimal findings + queue choice]
+    Legal --> Review[Reviewer + code verification]
+    Finance --> Review
+    Review --> Trace[Trace + human-review flag]
 ```
 
-The weights occupy about 1.58 GB. They stay outside Git. The adapter checks a
-pinned manifest and verifies model files before loading; the harness never
-downloads weights implicitly. No API key, paid inference or hosted tracing is
-used. The package also offers Torch and ONNX backends, but they are not part of
-this repository's local model-verification claim.
+- **Contract triage:** classify a fictional clause and attach a literal source
+  quote with Unicode offsets. Every legal result requires human review.
+- **Invoice reconciliation:** calculate exact Decimal findings in code, then ask
+  the model to classify the findings. Tenant scope, currency, duplicates and
+  model disagreement remain explicit checks. No payment is approved.
+- **Bounded roles:** deterministic dispatch followed by at most two provider
+  calls. `--routing model` retains the learned-router experiment with a three-call
+  cap. Low margins, missing evidence and backend errors remain visible gates.
 
-## What the evaluation measures
+The graph is programmed and bounded. A literal quote can be accurate while its
+classification is wrong; correct arithmetic does not make a model's queue choice
+correct. Neural scores are uncalibrated, and the margin is a routing heuristic.
 
-The small [fixture set](examples/cases.jsonl) is authored synthetic development
-data. Expected labels are kept outside runtime inputs. It is not a held-out
-benchmark or evidence of performance on real contracts or accounts.
+Earlier [synthetic workflow results](reference/README.md), including the failed
+learned router, remain unchanged. They answer a different question from the
+public classification experiment.
 
-The harness records raw routing/category correctness, review flags, contract
-violations, call counts, option-order changes, model identity and source/data
-hashes. The [checked-in results](reference/README.md) include mistakes and raw
-traces for both providers.
+## Test, inspect, extend
 
-A source quote can match the input exactly while its classification is wrong.
-Likewise, invoice arithmetic can be correct while a model selects the wrong
-queue. Those are separate checks and separate results. Neural scores here are
-uncalibrated softmax outputs; the margin is a routing heuristic, not a verified
-probability that a decision is correct.
+```sh
+.venv/bin/python -m pytest
+```
 
-## Design choices
+[Study design](docs/study-design.md) · [Dataset provenance](docs/datasets.md) ·
+[Evaluation tradeoffs](docs/public-evaluation.md) · [Third-party notices](NOTICE) ·
+[AI assistance](AI_ASSISTANCE.md) · [MIT license](LICENSE)
 
-- **Small typed decision model:** inspectable options and local execution, but
-  weaker open-ended reasoning and sensitivity to wording/order.
-- **Bounded specialist roles:** separate prompts and auditable handoffs, with
-  more calls than one classifier. Validated task shapes are dispatched in code;
-  use `--routing model` to reproduce the learned-router comparison. The graph is explicitly programmed; it is not
-  an unrestricted autonomous assistant.
-- **Deterministic evidence tools:** exact arithmetic and literal citations can be
-  tested independently, but neither establishes legal interpretation or semantic
-  correctness.
-- **Review gates:** low margins, invalid provider outputs, missing evidence and
-  disagreement are visible outcomes. All legal cases require human review. The
-  system never executes payments, provides legal advice or changes an account.
-
-See [the study design](docs/study-design.md) for the method, limits and next
-experiments. [AI assistance](AI_ASSISTANCE.md) and third-party attribution are
-recorded separately.
+No model was trained here. No paid API, real account, legal advice, payment,
+customer outcome or production deployment is claimed. Owner study and human
+review remain separate from automated verification.

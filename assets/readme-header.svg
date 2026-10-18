@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="310" viewBox="0 0 1200 310" role="img" aria-labelledby="title description">
+<title id="title">Decision Workbench</title><desc id="description">Local typed decisions, public-data comparisons and bounded review workflows. Abstract vector illustration, not a live interface.</desc>
+<defs><clipPath id="edge"><rect width="1200" height="310" rx="22"/></clipPath><pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#ad91ce" opacity=".2"/></pattern></defs>
+<style>@keyframes travel{to{stroke-dashoffset:-28}}@media(prefers-reduced-motion:no-preference){.trail{animation:travel 9s linear infinite}}</style>
+<g clip-path="url(#edge)"><rect width="1200" height="310" fill="#211a34"/><rect x="696.0" width="504.0" height="310" fill="url(#dots)"/>
+<circle cx="1180" cy="60" r="240" fill="none" stroke="#423257"/><circle cx="1180" cy="60" r="205" fill="none" stroke="#423257"/>
+<text x="52" y="46" fill="#bca7dc" font-family="ui-monospace,'Courier New',monospace" font-size="17" letter-spacing="1">LOCAL MODELS + EVALUATION</text>
+<text x="48" y="148" fill="#fff8ed" font-family="'Arial Black',Arial,sans-serif" font-size="80" font-weight="900" letter-spacing="-4">Decision</text>
+<text x="48" y="230" fill="#fff8ed" font-family="'Arial Black',Arial,sans-serif" font-size="80" font-weight="900" letter-spacing="-4">Workbench<tspan fill="#ff9a83">.</tspan></text>
+<path d="M764 160h82m0 0V77h76m-76 83h76m-76 0v83h76" stroke="#9b7fca" stroke-width="3" fill="none"/><circle cx="846" cy="160" r="7" fill="#c5aff2"/>
+<g stroke="#171326" stroke-width="3" stroke-linejoin="round"><path d="m771 103 49 28-49 29-49-29z" fill="#ffb09a"/><path d="m722 131 49 29v56l-49-28z" fill="#dc8172"/><path d="m771 160 49-29v57l-49 28z" fill="#b96168"/></g>
+<rect x="922" y="54" width="158" height="46" rx="12" fill="#b9f0d4"/><rect x="922" y="137" width="158" height="46" rx="12" fill="#423257" stroke="#9678b7" stroke-width="2"/><rect x="922" y="220" width="158" height="46" rx="12" fill="#423257" stroke="#9678b7" stroke-width="2"/>
+<path d="m947 77 8 8 17-17" stroke="#365f4c" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M990 77h63m-116 83h63m-63 83h63" stroke="#7a9e87" stroke-width="3" stroke-linecap="round"/><circle cx="1034" cy="160" r="9" fill="#c2adea"/><circle cx="1034" cy="243" r="9" fill="#ffad96"/>
+<path d="M1123 43v232" fill="none" stroke="#806495" stroke-width="1"/><path d="m1117 49 6-6 6 6m-12 220 6 6 6-6" stroke="#bfa5df" stroke-width="2" fill="none"/><path d="m1155 28 4 11 11 4-11 4-4 11-4-11-11-4 11-4z" fill="#ff9a83"/>
+</g></svg>
