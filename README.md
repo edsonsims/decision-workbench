@@ -12,8 +12,7 @@ and a **bounded review workflow** for fictional clauses and synthetic invoices.
 Both run locally; neither executes legal or financial actions.
 
 [Recorded model comparison](reference/public-v1/README.md) ·
-[Evaluation protocol](docs/public-evaluation.md) · [API examples](docs/api-examples.md) ·
-[Assistance & attribution](AI_ASSISTANCE.md)
+[Evaluation protocol](docs/public-evaluation.md) · [API examples](docs/api-examples.md)
 
 ## Start without weights
 
@@ -154,7 +153,7 @@ public classification experiment.
 
 [Study design](docs/study-design.md) · [Dataset provenance](docs/datasets.md) ·
 [Evaluation tradeoffs](docs/public-evaluation.md) · [Third-party notices](NOTICE) ·
-[AI assistance](AI_ASSISTANCE.md) · [MIT license](LICENSE)
+[MIT license](LICENSE)
 
 No model was trained here. No paid API, real account, legal advice, payment,
 customer outcome or production deployment is claimed. Owner study and human
