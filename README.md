@@ -14,6 +14,11 @@ Both run locally; neither executes legal or financial actions.
 [Recorded model comparison](reference/public-v1/README.md) ·
 [Evaluation protocol](docs/public-evaluation.md) · [API examples](docs/api-examples.md)
 
+A separate [BANKING77 v2 freeze](docs/banking-public-v2.md) now has 160 development
+and 160 test queries with an offline verifier and four option-order projections.
+It prepares a development-only abstention study; inference, threshold fitting
+and new quality results remain planned. The public-v1 comparison below is unchanged.
+
 ## Start without weights
 
 Python **3.11+**, from the repository root:

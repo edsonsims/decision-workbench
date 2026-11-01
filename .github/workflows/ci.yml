@@ -27,6 +27,7 @@ jobs:
       - run: python -m pytest
       - run: python -m workbench.harness --backend rules --out .local/ci-evaluation
       - run: python -m workbench.datasets verify --out benchmarks/public-v1
+      - run: python -m workbench.banking_v2 verify --out benchmarks/banking-public-v2
       - run: python -m workbench.benchmark_report --runs reference/public-v1
       - uses: actions/upload-artifact@v7.0.2
         with:
